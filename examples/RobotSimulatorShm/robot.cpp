@@ -1,4 +1,4 @@
-#include "Robot.h"
+#include "robot.h"
 #include "b3RobotSimulatorClientAPI_NoGUI.h"
 #include "Bullet3Common/b3HashMap.h"
 

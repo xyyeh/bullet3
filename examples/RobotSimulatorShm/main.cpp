@@ -1,21 +1,14 @@
-
-// #ifdef B3_USE_ROBOTSIM_GUI
 #include "b3RobotSimulatorClientAPI.h"
-// #else
-// #include "b3RobotSimulatorClientAPI_NoGUI.h"
-// #endif
-
-// #include "../Utils/b3Clock.h"
 
 #include <string.h>
 #include <iostream>
 #include <assert.h>
 #include <sys/mman.h>
 #include <sys/shm.h>
-#include <atomic>
 
 #define ASSERT_EQ(a, b) assert((a) == (b));
-#include "Robot.h"
+#include "robot.h"
+#include "shm_sem.h"
 
 const unsigned int kSecToNanosec = 1e9;
 const unsigned int kShmSize = 1024;
@@ -39,23 +32,11 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	// connect shm
-	RobotData* shm;
-
-	// create segment
-	int shmid;
-	if ((shmid = shmget(kShmKey, kShmSize, IPC_CREAT | 0666)) < 0)
-	{
-		std::cerr << "shmget";
-		exit(1);
-	}
-
-	// attach segment to data space
-	if ((shm = (RobotData*)shmat(shmid, 0, 0)) == (RobotData*)-1)
-	{
-		std::cerr << "shmat";
-		exit(1);
-	}
+	// shared memory
+	ShmSemaphore shared_memory("/physics_shm");
+	shared_memory.Create(sizeof(struct RobotData));
+	shared_memory.Attach();
+	RobotData* ptr = static_cast<RobotData*>(shared_memory.Data());
 
 	// setup visualizer
 	sim->configureDebugVisualizer(COV_ENABLE_GUI, 0);
@@ -73,7 +54,6 @@ int main(int argc, char* argv[])
 
 	// setup gravity
 	sim->setGravity(btVector3(0, 0, -9.81));
-	// sim->setGravity(btVector3(0, 0, 0));
 
 	// setup world
 	int planeId = sim->loadURDF("plane.urdf");
@@ -114,24 +94,14 @@ int main(int argc, char* argv[])
 
 		sim_time += kFixedTimeStep;
 
-		// read states
+		shared_memory.Lock();
+		// read states and send torques
 		for (uint32_t i = 0; i < LWR.Dof(); i++)
 		{
-			LWR.JointState(sim, i, q[i], dq[i]);
+			LWR.JointState(sim, i, ptr->q[i], ptr->dq[i]);
+			LWR.SetDesiredTau(sim, i, ptr->tau[i]);
 		}
-
-		// send torques
-		for (uint32_t i = 0; i < LWR.Dof(); i++)
-		{
-			LWR.SetDesiredTau(sim, i, shm->tau[i]);
-		}
-
-		// update shared memory
-		for (uint32_t i = 0; i < LWR.Dof(); i++)
-		{
-			shm->q[i] = q[i];
-			shm->dq[i] = dq[i];
-		}
+		shared_memory.Unlock();
 
 		sim->stepSimulation();
 

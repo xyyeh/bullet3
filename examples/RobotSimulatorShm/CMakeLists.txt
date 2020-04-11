@@ -9,8 +9,10 @@ set(SRCS
   main.cpp
 	b3RobotSimulatorClientAPI.cpp
 	b3RobotSimulatorClientAPI.h	
-	Robot.cpp
-	Robot.h
+	robot.cpp
+  robot.h
+  shm_sem.h
+  shm_sem.cc
 	../ExampleBrowser/InProcessExampleBrowser.cpp
 	../SharedMemory/GraphicsServerExample.cpp
 	../SharedMemory/RemoteGUIHelper.cpp
@@ -21,5 +23,5 @@ set(SRCS
 
 add_executable(RobotSimulatorShm ${SRCS})
 
-target_link_libraries(RobotSimulatorShm BulletRobotics BulletExampleBrowserLib BulletFileLoader BulletWorldImporter BulletSoftBody BulletDynamics BulletCollision BulletInverseDynamicsUtils BulletInverseDynamics LinearMath OpenGLWindow gwen Bullet3Common)
+target_link_libraries(RobotSimulatorShm pthread rt BulletRobotics BulletExampleBrowserLib BulletFileLoader BulletWorldImporter BulletSoftBody BulletDynamics BulletCollision BulletInverseDynamicsUtils BulletInverseDynamics LinearMath OpenGLWindow gwen Bullet3Common)
 
