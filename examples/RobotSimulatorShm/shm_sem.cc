@@ -9,7 +9,7 @@
 #include <cstdlib>
 #include <iostream>
 
-const std::string ShmSemaphore::sLockSemaphoreName = "/semaphoreInit";
+const std::string ShmSemaphore::sLockSemaphoreName = "/physics_sem";
 
 ShmSemaphore::ShmSemaphore(const std::string& sName)
 	: name_(sName), ptr_(nullptr), shm_id_(-1), sem_id_(nullptr), size_(0)
