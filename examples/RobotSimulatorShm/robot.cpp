@@ -6,30 +6,30 @@
 
 struct RobotInternalData
 {
-	int m_RobotId;
-	uint32_t m_RobotDof;
+	int robot_id;
+	uint32_t robot_dof;
 
 	RobotInternalData()
-		: m_RobotId(-1), m_RobotDof(0)
+		: robot_id(-1), robot_dof(0)
 	{
 	}
 
-	b3HashMap<b3HashString, int> m_jointNameToId;
+	b3HashMap<b3HashString, int> joint_name_to_id;
 };
 
 Robot::Robot()
 {
-	m_data = new RobotInternalData();
+	data_ = new RobotInternalData();
 }
 
 Robot::~Robot()
 {
-	delete m_data;
+	delete data_;
 }
 
 unsigned int Robot::Dof() const
 {
-	return m_data->m_RobotDof;
+	return data_->robot_dof;
 }
 
 void Robot::SetDesiredQ(class b3RobotSimulatorClientAPI_NoGUI* sim, const int& jointIdx, const double& desiredAngle, const double& maxTorque, const double& kp, const double& kd)
@@ -39,33 +39,33 @@ void Robot::SetDesiredQ(class b3RobotSimulatorClientAPI_NoGUI* sim, const int& j
 	controlArgs.m_kd = kd;
 	controlArgs.m_kp = kp;
 	controlArgs.m_targetPosition = desiredAngle;
-	sim->setJointMotorControl(m_data->m_RobotId, jointIdx, controlArgs);
+	sim->setJointMotorControl(data_->robot_id, jointIdx, controlArgs);
 }
 
 void Robot::SetDesiredTau(class b3RobotSimulatorClientAPI_NoGUI* sim, const int& jointIdx, const double& desiredTorque)
 {
 	b3RobotSimulatorJointMotorArgs controlArgs(CONTROL_MODE_TORQUE);
 	controlArgs.m_maxTorqueValue = desiredTorque;
-	sim->setJointMotorControl(m_data->m_RobotId, jointIdx, controlArgs);
+	sim->setJointMotorControl(data_->robot_id, jointIdx, controlArgs);
 }
 
 void Robot::JointState(class b3RobotSimulatorClientAPI_NoGUI* sim, const int& jointIdx, double& q, double& dq)
 {
 	struct b3JointSensorState state;
-	sim->getJointState(m_data->m_RobotId, jointIdx, &state);
+	sim->getJointState(data_->robot_id, jointIdx, &state);
 	q = state.m_jointPosition;
 	dq = state.m_jointVelocity;
 }
 
 void Robot::ResetPose(class b3RobotSimulatorClientAPI_NoGUI* sim)
 {
-	//release all motors
-	int numJoints = sim->getNumJoints(m_data->m_RobotId);
+	// release all motors
+	int numJoints = sim->getNumJoints(data_->robot_id);
 	for (int i = 0; i < numJoints; i++)
 	{
 		b3RobotSimulatorJointMotorArgs controlArgs(CONTROL_MODE_VELOCITY);
 		controlArgs.m_maxTorqueValue = 0;
-		sim->setJointMotorControl(m_data->m_RobotId, i, controlArgs);
+		sim->setJointMotorControl(data_->robot_id, i, controlArgs);
 	}
 }
 
@@ -74,22 +74,23 @@ int Robot::Setup(class b3RobotSimulatorClientAPI_NoGUI* sim, const std::string& 
 	b3RobotSimulatorLoadUrdfFileArgs args;
 	args.m_startPosition = startPos;
 	args.m_startOrientation = startOrn;
+	args.m_forceOverrideFixedBase = true;
 
-	m_data->m_RobotId = sim->loadURDF(urdf_path, args);
+	data_->robot_id = sim->loadURDF(urdf_path, args);
 
-	m_data->m_RobotDof = sim->getNumJoints(m_data->m_RobotId);
-	for (int i = 0; i < m_data->m_RobotDof; i++)
+	data_->robot_dof = sim->getNumJoints(data_->robot_id);
+	for (int i = 0; i < data_->robot_dof; i++)
 	{
 		b3JointInfo jointInfo;
-		sim->getJointInfo(m_data->m_RobotId, i, &jointInfo);
+		sim->getJointInfo(data_->robot_id, i, &jointInfo);
 		if (jointInfo.m_jointName[0])
 		{
 			std::cout << "joint " << i << " maps to " << jointInfo.m_jointName << std::endl;
-			m_data->m_jointNameToId.insert(jointInfo.m_jointName, i);
+			data_->joint_name_to_id.insert(jointInfo.m_jointName, i);
 		}
 	}
 
 	ResetPose(sim);
 
-	return m_data->m_RobotId;
+	return data_->robot_id;
 }
