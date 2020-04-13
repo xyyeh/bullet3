@@ -132,34 +132,6 @@ void Robot::ResetPose(class b3RobotSimulatorClientAPI_NoGUI* sim)
 		sim->resetJointState(data_->robot_id, joint_idx[i], -0.555272);
 		sim->createConstraint(data_->robot_id, joint_idx[i], 0, -1, &jointInfo[i]);
 	}
-
-	// b3JointInfo jointInfo1 = MakeLegJointInfo(R * cos(base_angle + angles[0]), R * sin(base_angle + angles[0]));
-	// b3JointInfo jointInfo2 = MakeLegJointInfo(R * cos(base_angle + angles[1]), R * sin(base_angle + angles[1]));
-	// b3JointInfo jointInfo3 = MakeLegJointInfo(R * cos(base_angle + angles[2]), R * sin(base_angle + angles[2]));
-	// b3JointInfo jointInfo4 = MakeLegJointInfo(R * cos(base_angle + angles[3]), R * sin(base_angle + angles[3]));
-	// b3JointInfo jointInfo5 = MakeLegJointInfo(R * cos(base_angle + angles[4]), R * sin(base_angle + angles[4]));
-	// b3JointInfo jointInfo6 = MakeLegJointInfo(R * cos(base_angle + angles[5]), R * sin(base_angle + angles[5]));
-
-	// std::cout << R * cos(base_angle + angles[0]) << "," << R * sin(base_angle + angles[0]) << std::endl;
-	// std::cout << R * cos(base_angle + angles[1]) << "," << R * sin(base_angle + angles[1]) << std::endl;
-	// std::cout << R * cos(base_angle + angles[2]) << "," << R * sin(base_angle + angles[2]) << std::endl;
-	// std::cout << R * cos(base_angle + angles[3]) << "," << R * sin(base_angle + angles[3]) << std::endl;
-	// std::cout << R * cos(base_angle + angles[4]) << "," << R * sin(base_angle + angles[4]) << std::endl;
-	// std::cout << R * cos(base_angle + angles[5]) << "," << R * sin(base_angle + angles[5]) << std::endl;
-
-	// sim->resetJointState(data_->robot_id, *data_->joint_name_to_id["joint1"], -0.555272);
-	// sim->resetJointState(data_->robot_id, *data_->joint_name_to_id["joint2"], -0.555272);
-	// sim->resetJointState(data_->robot_id, *data_->joint_name_to_id["joint3"], -0.555272);
-	// sim->resetJointState(data_->robot_id, *data_->joint_name_to_id["joint4"], -0.555272);
-	// sim->resetJointState(data_->robot_id, *data_->joint_name_to_id["joint5"], -0.555272);
-	// sim->resetJointState(data_->robot_id, *data_->joint_name_to_id["joint6"], -0.555272);
-
-	// sim->createConstraint(data_->robot_id, *data_->joint_name_to_id["joint1"], 0, -1, &jointInfo[0]);
-	// sim->createConstraint(data_->robot_id, *data_->joint_name_to_id["joint2"], 0, -1, &jointInfo[1]);
-	// sim->createConstraint(data_->robot_id, *data_->joint_name_to_id["joint3"], 0, -1, &jointInfo[2]);
-	// sim->createConstraint(data_->robot_id, *data_->joint_name_to_id["joint4"], 0, -1, &jointInfo[3]);
-	// sim->createConstraint(data_->robot_id, *data_->joint_name_to_id["joint5"], 0, -1, &jointInfo[4]);
-	// sim->createConstraint(data_->robot_id, *data_->joint_name_to_id["joint6"], 0, -1, &jointInfo[5]);
 }
 
 int Robot::Setup(class b3RobotSimulatorClientAPI_NoGUI* sim, const std::string& urdf_path, const btVector3& startPos, const btQuaternion& startOrn)
