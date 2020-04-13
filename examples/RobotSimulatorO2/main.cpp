@@ -49,18 +49,19 @@ int main(int argc, char* argv[])
 	sim->setTimeStep(kFixedTimeStep);
 
 	// setup gravity
-	sim->setGravity(btVector3(0, 0, -0.5));
+	sim->setGravity(btVector3(0, 0, 0));
 
 	// setup world
 	int plane_id = sim->loadURDF("plane.urdf");
 
 	// setup robot
 	Robot o2;
-	int o2_id = o2.Setup(sim, "./o2/o2.urdf", btVector3(0, 0, 1.5));  //, btQuaternion(0, 0, 0.38268343, 0.92387953));
-	std::cout << "dof = " << o2.Dof() << std::endl;
+	int o2_id = o2.Setup(sim, "./o2/o2.urdf", btVector3(0, 0, 1));  //, btQuaternion(0, 0, 0.38268343, 0.92387953));
+	std::cout << "loaded dof = " << o2.LoadedDof() << std::endl;
+	std::cout << "active dof = " << o2.ActiveDof() << std::endl;
 
 	// additional setup
-	for (int i = -1; i < o2.Dof(); i++)
+	for (int i = -1; i < o2.LoadedDof(); i++)
 	{
 		sim->setCollisionFilterGroupMask(o2_id, i, 0, 0);
 	}
@@ -74,10 +75,30 @@ int main(int argc, char* argv[])
 	// simulation paramters
 	sim->setRealTimeSimulation(false);
 
+	// variables
+	std::vector<double> q(o2.ActiveDof());
+	std::vector<double> dq(o2.ActiveDof());
+	std::vector<double> tau_d(o2.ActiveDof());
+
+	std::vector<double> q_d(o2.ActiveDof());
+
+	for (auto& x : q_d)
+	{
+		x = 0;
+	}
+
+	// clang-format off
+	q_d[6] = q_d[13] = -0.4;
+	q_d[7] = 1; q_d[14] = -q_d[7];
+	q_d[8] = 0.4; q_d[15] = -q_d[8];
+  q_d[9] = q_d[16] = 1.5;
+  q_d[10] = 1; q_d[17] = -q_d[10];
+  q_d[11] = q_d[18] = -0.4;
+  q_d[12] = 0.4; q_d[19] = -q_d[12];
+	// clang-format on
+
 	// start loop
 	double sim_time = 0;
-	double tau[7], q[7], dq[7];
-	double q_d[7] = {0, 0.3, 0, -0.3, 0, 1.5, 0};
 	double prev_time = 0;
 
 	// start looping after one second
@@ -93,6 +114,8 @@ int main(int argc, char* argv[])
 
 		sim_time += kFixedTimeStep;
 
+		o2.JointStates(sim, q, dq);
+
 		// shared_memory.Lock();
 		// // read states and send torques
 		// for (uint32_t i = 0; i < o2.Dof(); i++)
@@ -102,16 +125,30 @@ int main(int argc, char* argv[])
 		// }
 		// shared_memory.Unlock();
 
+		o2.SetDesiredTaus(sim, tau_d);
+
+		for (int i = 0; i < q.size(); i++)
+		{
+			// desired torque values
+			if (i < 6)
+			{
+				tau_d[i] = 400 * (q_d[i] - q[i]) + 40 * (0 - dq[i]);
+			}
+			else
+			{
+				tau_d[i] = 40 * (q_d[i] - q[i]) + 4 * (0 - dq[i]);
+			}
+		}
+
 		sim->stepSimulation();
 
-		// if ((sim_time - prev_time) > 0.25)
+		// if ((sim_time - prev_time) > 0.5)
 		// {
 		// 	prev_time = sim_time;
-		// 	// print time
-		// 	// printf("%.3f\n", sim_time);
-		// 	for (int i = 0; i < o2.Dof(); i++)
+
+		// 	for (int i = 0; i < 6; i++)
 		// 	{
-		// 		printf("%.3f\t", shm->tau[i]);
+		// 		printf("%.3f\t", q[i]);
 		// 	}
 		// 	printf("\n");
 		// }

@@ -208,7 +208,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
-  <joint name="base_joint6f" type="fixed">
+  <joint name="base_fixed6f" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="base_link6"/>
@@ -236,7 +236,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
-  <joint name="base_joint6f1" type="fixed">
+  <joint name="base_fixed6f1" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="base_link6f"/>
@@ -265,7 +265,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
-  <joint name="right_joint_chassis" type="fixed">
+  <joint name="right_fixed_chassis" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0.785398" xyz="0.58 -0.2 0"/>
     <parent link="base_link6"/>
@@ -289,8 +289,8 @@
     </collision>
     <inertial>
       <mass value="3.21"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="0.000060 0.018000 -0.030000" rpy="0 0 0"/>
+      <inertia ixx="0.006330" ixy="-0.000006" ixz="0.000003" iyy="0.005220" iyz="-0.000802" izz="0.003480"/>
     </inertial>
   </link>
   <joint name="right_joint1" type="revolute">
@@ -317,8 +317,8 @@
     </collision>
     <inertial>
       <mass value="0.99"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="-0.000070 -0.054100 -0.020980" rpy="0 0 0"/>
+      <inertia ixx="0.002398" ixy="0.000019" ixz="-0.000008" iyy="0.001195" iyz="0.000886" izz="0.001878"/>
     </inertial>
   </link>
   <joint name="right_joint2" type="revolute">
@@ -345,8 +345,8 @@
     </collision>
     <inertial>
       <mass value="5.11"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="0.008960 0.013300 -0.092400" rpy="0 0 0"/>
+      <inertia ixx="0.019800" ixy="-0.000151" ixz="0.000153" iyy="0.018700" iyz="-0.001380" izz="0.005560"/>
     </inertial>
   </link>
   <joint name="right_joint3" type="revolute">
@@ -373,8 +373,8 @@
     </collision>
     <inertial>
       <mass value="0.974"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="-0.000980 0.047130 -0.027200" rpy="0 0 0"/>
+      <inertia ixx="0.002374" ixy="0.000025" ixz="0.000006" iyy="0.001407" iyz="-0.000920" izz="0.001613"/>
     </inertial>
   </link>
   <joint name="right_joint4" type="revolute">
@@ -401,8 +401,8 @@
     </collision>
     <inertial>
       <mass value="3.733"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="0.001980 0.000500 -0.160000" rpy="0 0 0"/>
+      <inertia ixx="0.017000" ixy="-0.000058" ixz="0.000177" iyy="0.017700" iyz="0.000080" izz="0.005250"/>
     </inertial>
   </link>
   <joint name="right_joint5" type="revolute">
@@ -429,8 +429,8 @@
     </collision>
     <inertial>
       <mass value="0.3"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="0.000000 -0.003430 -0.000010" rpy="0 0 0"/>
+      <inertia ixx="0.000115" ixy="-0.000000" ixz="-0.000000" iyy="0.000128" iyz="0.000000" izz="0.000123"/>
     </inertial>
   </link>
   <joint name="right_joint6" type="revolute">
@@ -457,8 +457,8 @@
     </collision>
     <inertial>
       <mass value="0.387"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="-0.000160 -0.077160 0.000470" rpy="0 0 0"/>
+      <inertia ixx="0.000456" ixy="0.000000" ixz="-0.000000" iyy="0.000195" iyz="-0.000014" izz="0.000417"/>
     </inertial>
   </link>
   <joint name="right_joint7" type="revolute">
@@ -485,11 +485,11 @@
     </collision>
     <inertial>
       <mass value="2.5"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="0.000000 0.000000 -0.095000" rpy="0 0 0"/>
+      <inertia ixx="0.001158" ixy="0.000000" ixz="0.000000" iyy="0.001708" iyz="0.000000" izz="0.002207"/>
     </inertial>
   </link>
-  <joint name="right_joint8" type="fixed">
+  <joint name="right_fixed8" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="1.5707963 0 0" xyz="0 -0.23675 0"/>
     <parent link="right_link7"/>
@@ -517,7 +517,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
-  <joint name="right_joint2f" type="fixed">
+  <joint name="right_fixed2f" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="right_link2"/>
@@ -545,7 +545,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
-  <joint name="right_joint3f" type="fixed">
+  <joint name="right_fixed3f" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="right_link3"/>
@@ -573,7 +573,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
-  <joint name="right_joint4f" type="fixed">
+  <joint name="right_fixed4f" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="right_link4"/>
@@ -601,7 +601,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
-  <joint name="right_joint5f" type="fixed">
+  <joint name="right_fixed5f" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="right_link5"/>
@@ -629,7 +629,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
-  <joint name="right_joint8f" type="fixed">
+  <joint name="right_fixed8f" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="right_link8"/>
@@ -658,7 +658,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
-  <joint name="left_joint_chassis" type="fixed">
+  <joint name="left_fixed_chassis" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 -0.785398" xyz="0.58 0.2 0"/>
     <parent link="base_link6"/>
@@ -682,8 +682,8 @@
     </collision>
     <inertial>
       <mass value="3.21"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="0.000060 0.018000 0.030000" rpy="0 0 0"/>
+      <inertia ixx="0.006330" ixy="-0.000006" ixz="-0.000003" iyy="0.005220" iyz="0.000802" izz="0.003480"/>
     </inertial>
   </link>
   <joint name="left_joint1" type="revolute">
@@ -710,8 +710,8 @@
     </collision>
     <inertial>
       <mass value="0.99"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="0.000070 -0.054100 -0.020980" rpy="0 0 0"/>
+      <inertia ixx="0.002398" ixy="-0.000019" ixz="0.000008" iyy="0.001195" iyz="0.000886" izz="0.001878"/>
     </inertial>
   </link>
   <joint name="left_joint2" type="revolute">
@@ -738,8 +738,8 @@
     </collision>
     <inertial>
       <mass value="5.11"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="0.008960 -0.013300 -0.092400" rpy="0 0 0"/>
+      <inertia ixx="0.019800" ixy="0.000151" ixz="0.000153" iyy="0.018700" iyz="0.001380" izz="0.005560"/>
     </inertial>
   </link>
   <joint name="left_joint3" type="revolute">
@@ -766,8 +766,8 @@
     </collision>
     <inertial>
       <mass value="0.974"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="-0.000980 0.047130 0.027200" rpy="0 0 0"/>
+      <inertia ixx="0.002374" ixy="0.000025" ixz="-0.000006" iyy="0.001407" iyz="0.000920" izz="0.001613"/>
     </inertial>
   </link>
   <joint name="left_joint4" type="revolute">
@@ -794,8 +794,8 @@
     </collision>
     <inertial>
       <mass value="3.733"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="0.001980 -0.000500 -0.160000" rpy="0 0 0"/>
+      <inertia ixx="0.017000" ixy="0.000058" ixz="0.000177" iyy="0.017700" iyz="-0.000080" izz="0.005250"/>
     </inertial>
   </link>
   <joint name="left_joint5" type="revolute">
@@ -822,8 +822,8 @@
     </collision>
     <inertial>
       <mass value="0.3"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="0.000000 -0.003430 0.000010" rpy="0 0 0"/>
+      <inertia ixx="0.000115" ixy="-0.000000" ixz="0.000000" iyy="0.000128" iyz="-0.000000" izz="0.000123"/>
     </inertial>
   </link>
   <joint name="left_joint6" type="revolute">
@@ -850,8 +850,8 @@
     </collision>
     <inertial>
       <mass value="0.387"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="0.000160 -0.077160 0.000470" rpy="0 0 0"/>
+      <inertia ixx="0.000456" ixy="-0.000000" ixz="0.000000" iyy="0.000195" iyz="-0.000014" izz="0.000417"/>
     </inertial>
   </link>
   <joint name="left_joint7" type="revolute">
@@ -878,11 +878,11 @@
     </collision>
     <inertial>
       <mass value="2.5"/>
-      <origin xyz="0 -0.0324958 -0.0675818" rpy="0 0 0"/>
-      <inertia ixx="0.0180416958283" ixy="0.0" ixz="0.0" iyy="0.0159136071891" iyz="0.0046758424612" izz="0.00620690827127"/>
+      <origin xyz="-0.000000 0.000000 -0.095000" rpy="0 0 0"/>
+      <inertia ixx="0.001158" ixy="0.000000" ixz="0.000000" iyy="0.001708" iyz="0.000000" izz="0.002207"/>
     </inertial>
   </link>
-  <joint name="left_joint8" type="fixed">
+  <joint name="left_fixed8" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="1.5707963 0 0" xyz="0 -0.23675 0"/>
     <parent link="left_link7"/>
@@ -910,7 +910,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
-  <joint name="left_joint2f" type="fixed">
+  <joint name="left_fixed2f" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="left_link2"/>
@@ -938,7 +938,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
-  <joint name="left_joint3f" type="fixed">
+  <joint name="left_fixed3f" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="left_link3"/>
@@ -966,7 +966,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
-  <joint name="left_joint4f" type="fixed">
+  <joint name="left_fixed4f" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="left_link4"/>
@@ -994,7 +994,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
-  <joint name="left_joint5f" type="fixed">
+  <joint name="left_fixed5f" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="left_link5"/>
@@ -1022,7 +1022,7 @@
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
-  <joint name="left_joint8f" type="fixed">
+  <joint name="left_fixed8f" type="fixed">
     <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="left_link8"/>
@@ -1042,7 +1042,7 @@
     <color rgba="1. 0.55 0. 1."/>
   </material>
   <material name="orange_transparent">
-    <color rgba="1. 0.55 0. 0.5"/>
+    <color rgba="1. 0.55 0. 0"/>
   </material>
   <material name="red">
     <color rgba="1. 0. 0. 1."/>
