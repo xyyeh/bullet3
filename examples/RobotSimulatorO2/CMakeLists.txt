@@ -7,6 +7,7 @@ include_directories(
   
 set(SRCS
   main.cpp
+  contact_sensor.cpp
 	b3RobotSimulatorClientAPI.cpp
 	b3RobotSimulatorClientAPI.h	
 	robot.cpp
