@@ -11,12 +11,12 @@
 #include "shm_sem.h"
 
 const unsigned int kSecToNanosec = 1e9;
-
+const unsigned int kDof = 20;
 struct RobotData
 {
-	double tau[7];
-	double q[7];
-	double dq[7];
+	double tau[kDof];
+	double q[kDof];
+	double dq[kDof];
 };
 
 int main(int argc, char* argv[])
@@ -27,12 +27,6 @@ int main(int argc, char* argv[])
 		std::cout << "Cannot connect" << std::endl;
 		return -1;
 	}
-
-	// shared memory
-	ShmSemaphore shared_memory("/physics_shm");
-	shared_memory.Create(sizeof(struct RobotData));
-	shared_memory.Attach();
-	RobotData* ptr = static_cast<RobotData*>(shared_memory.Data());
 
 	// setup visualizer
 	sim->configureDebugVisualizer(COV_ENABLE_GUI, 0);
@@ -56,7 +50,7 @@ int main(int argc, char* argv[])
 
 	// setup robot
 	Robot o2;
-	int o2_id = o2.Setup(sim, "./o2/o2.urdf", btVector3(0, 0, 1.5));  //, btQuaternion(0, 0, 0.38268343, 0.92387953));
+	int o2_id = o2.Setup(sim, "./o2/o2.urdf", btVector3(0, 0, 1.5));
 	std::cout << "loaded dof = " << o2.LoadedDof() << std::endl;
 	std::cout << "active dof = " << o2.ActiveDof() << std::endl;
 
@@ -66,13 +60,19 @@ int main(int argc, char* argv[])
 		sim->setCollisionFilterGroupMask(o2_id, i, 0, 0);
 	}
 
+	// shared memory
+	ShmSemaphore shared_memory("/physics_shm");
+	shared_memory.Create(sizeof(struct RobotData));
+	shared_memory.Attach();
+	RobotData* ptr = static_cast<RobotData*>(shared_memory.Data());
+
 	// setup dynamics
 	struct b3RobotSimulatorChangeDynamicsArgs dynArgs;
 	dynArgs.m_linearDamping = 0;
 	dynArgs.m_angularDamping = 0;
 	sim->changeDynamics(o2_id, 0, dynArgs);
 
-	// simulation paramters
+	// simulation parameters
 	sim->setRealTimeSimulation(false);
 
 	// variables
@@ -96,16 +96,15 @@ int main(int argc, char* argv[])
 	double prev_time = 0;
 
 	// setup additional stuffs
-	int block_id = sim->loadURDF("cube.urdf");
-	btVector3 pos(0, 2, 3);
-	btQuaternion ori(0, 0, 0, 1);
-	sim->resetBasePositionAndOrientation(block_id, pos, ori);
+	// int block_id = sim->loadURDF("cube.urdf");
+	// btVector3 pos(0, 2, 3);
+	// btQuaternion ori(0, 0, 0, 1);
+	// sim->resetBasePositionAndOrientation(block_id, pos, ori);
 
 	// contact sensor
-	ContactSensor sensor;
-	sensor.Setup(block_id, plane_id);
-
-	double forces[6];
+	// ContactSensor sensor;
+	// sensor.Setup(block_id, plane_id);
+	// double forces[6];
 
 	// start looping after one second
 	struct timespec t;
@@ -120,19 +119,16 @@ int main(int argc, char* argv[])
 
 		sim_time += kFixedTimeStep;
 
-		o2.JointStates(sim, q, dq);
-
 		// shared_memory.Lock();
-		// // read states and send torques
-		// for (uint32_t i = 0; i < o2.Dof(); i++)
+		// for (uint32_t i = 0; i < o2.ActiveDof(); i++)
 		// {
 		// 	o2.JointState(sim, i, ptr->q[i], ptr->dq[i]);
 		// 	o2.SetDesiredTau(sim, i, ptr->tau[i]);
 		// }
 		// shared_memory.Unlock();
 
+		o2.JointStates(sim, q, dq);
 		o2.SetDesiredTaus(sim, tau_d);
-
 		for (int i = 0; i < q.size(); i++)
 		{
 			// desired torque values
@@ -146,24 +142,25 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		sensor.Wrench(sim, forces, true);
+		// sensor.Wrench(sim, forces, true);
 
+		// step simulation
 		sim->stepSimulation();
 
-		if ((sim_time - prev_time) > 0.5)
-		{
-			prev_time = sim_time;
+		// printing
+		// if ((sim_time - prev_time) > 0.5)
+		// {
+		// 	prev_time = sim_time;
 
-			for (int i = 0; i < 6; i++)
-			{
-				printf("%.3f\t", forces[i]);
-			}
-			printf("\n");
-		}
+		// 	for (int i = 0; i < 6; i++)
+		// 	{
+		// 		printf("%.3f\t", forces[i]);
+		// 	}
+		// 	printf("\n");
+		// }
 
+		// wait for tick
 		clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &t, NULL);
-
-		// calculate next shot
 		t.tv_nsec += (kFixedTimeStep * kSecToNanosec);
 		while (t.tv_nsec >= kSecToNanosec)
 		{

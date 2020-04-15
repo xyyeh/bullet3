@@ -10,6 +10,7 @@ set(SRCS
 	b3RobotSimulatorClientAPI.cpp
 	robot.cpp
   shm_sem.cpp
+  flexible_joint.cpp
 	../ExampleBrowser/InProcessExampleBrowser.cpp
 	../SharedMemory/GraphicsServerExample.cpp
 	../SharedMemory/RemoteGUIHelper.cpp

@@ -12,7 +12,19 @@
 
 const unsigned int kSecToNanosec = 1e9;
 
-#define DOF (7)
+struct RobotPath
+{
+#define kLineNum (10)
+
+	b3RobotSimulatorAddUserDebugLineArgs args[kLineNum];
+	btVector3 point[kLineNum];
+	int id[kLineNum] = {-10, -10, -10, -10, -10, -10, -10, -10, -10, -10};
+
+	int prev_id = 0;
+	int curr_id = 0;
+};
+
+#define DOF (2)
 struct RobotData
 {
 	double tau[DOF];
@@ -59,20 +71,29 @@ int main(int argc, char* argv[])
 
 	// setup robot
 	Robot arm;
-	int robot_id = arm.Setup(sim, "./panda/panda.urdf", btVector3(0, 0, 0.00001));
+	int robot_id = arm.Setup(sim, "./panda/two_joints.urdf", btVector3(0, 0, 0.0000));
 
 	// disable collisions
 	for (int i = -1; i < arm.Dof(); i++)
 	{
 		sim->setCollisionFilterGroupMask(robot_id, i, 0, 0);
 	}
-	// sim->setCollisionFilterGroupMask(plane_id, -1, 0, 0);
+	sim->setCollisionFilterGroupMask(plane_id, -1, 0, 0);
 
 	// setup dynamics
 	struct b3RobotSimulatorChangeDynamicsArgs dynArgs;
 	dynArgs.m_linearDamping = 0;
 	dynArgs.m_angularDamping = 0;
 	sim->changeDynamics(robot_id, 0, dynArgs);
+
+	// setup additional stuffs
+	// int blockId = sim->loadURDF("cube.urdf");
+	// btVector3 pos(0, 0, 3);
+	// btQuaternion ori(0, 0, 0, 1);
+	// sim->resetBasePositionAndOrientation(blockId, pos, ori);
+
+	// path
+	RobotPath path;
 
 	// frame
 	b3RobotSimulatorAddUserDebugLineArgs frame_args;
@@ -94,13 +115,9 @@ int main(int argc, char* argv[])
 
 	// start loop
 	double sim_time = 0;
+	double tau[7], q[7], dq[7];
+	double q_d[7] = {0, 0.3, 0, -0.3, 0, 1.5, 0};
 	double prev_time = 0;
-
-	// clear torques
-	for (int i = 0; i < arm.Dof(); i++)
-	{
-		ptr->tau[i] = 0;
-	}
 
 	// start looping after one second
 	struct timespec t;
@@ -116,16 +133,25 @@ int main(int argc, char* argv[])
 		sim_time += kFixedTimeStep;
 
 		// read states and send torques
-		shared_memory.Lock();
+		// shared_memory.Lock();
 		for (uint32_t i = 0; i < arm.Dof(); i++)
 		{
-			arm.JointState(sim, i, ptr->q[i], ptr->dq[i]);
+			double q, dq;
+			arm.JointState(sim, i, q, dq);
+			double cmd = 0 * (0 - q) - 4 * dq;
+			ptr->tau[i] = arm.StepJointDynamics(sim, i, cmd, q, dq);
 			arm.SetDesiredTau(sim, i, ptr->tau[i]);
 		}
-		shared_memory.Unlock();
+		// shared_memory.Unlock();
+
+		// for (uint32_t i = 0; i < arm.Dof(); i++)
+		// 	arm.SetDesiredTau(sim, i, 0);
 
 		// step simulation
 		sim->stepSimulation();
+
+		// b3LinkState link_state;
+		// sim->getLinkState(robot_id, 5, 0, 0, &link_state);
 
 		if ((sim_time - prev_time) > 0.25)
 		{
@@ -141,6 +167,20 @@ int main(int argc, char* argv[])
 			// 	printf("%d\t", path.id[i]);
 			// }
 			// printf("\n");
+
+			// // remove old
+			// if (path.id[path.curr_id] != -10)
+			// {
+			// 	sim->removeUserDebugItem(path.id[path.curr_id]);
+			// }
+			// // add new
+			// path.prev_id = path.curr_id;
+			// path.curr_id = (path.prev_id + 1) % kLineNum;
+			// path.point[path.curr_id][0] = link_state.m_worldPosition[0];
+			// path.point[path.curr_id][1] = link_state.m_worldPosition[1];
+			// path.point[path.curr_id][2] = link_state.m_worldPosition[2];
+			// path.args[path.curr_id].m_lineWidth = 3;
+			// path.id[path.curr_id] = sim->addUserDebugLine(path.point[path.prev_id], path.point[path.curr_id], path.args[path.curr_id]);
 		}
 
 		// calculate next shot
