@@ -27,6 +27,7 @@ public:
    * @param[in] urdf_path URDF file location
    * @param[in] start_pos Starting position (defaults to 0,0,0)
    * @param[in] start_ori Starting orientation (defaults to 0,0,0,1)
+   * @return Id of the robot
    */
 	int Setup(class b3RobotSimulatorClientAPI_NoGUI* sim, const std::string& urdf_path, const class btVector3& start_pos = btVector3(0, 0, 0), const class btQuaternion& start_ori = btQuaternion(0, 0, 0, 1));
 

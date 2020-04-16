@@ -23,19 +23,21 @@ class FlexibleJoint
 
 		double tau_s{0};
 		double dtau_s{0};
+
+		double tau_cmd{0};
 	};
 
 private:
 	InternalDynamics dyn_;
 	JointParameters param_;
-	double dt_{0.001};
 
 public:
 	FlexibleJoint() = default;
 	virtual ~FlexibleJoint(){};
 
 	void SetParameters(const double& B, const double& K, const double& D);
-	void SetInputs(const double& tau, const double& q, const double& dq);
+	void SetInputs(const double& tau_cmd, const double& q, const double& dq);
+	void StepDynamics(const double& dt);
 
 	double MotorPosition() const;
 	double MotorVelocity() const;

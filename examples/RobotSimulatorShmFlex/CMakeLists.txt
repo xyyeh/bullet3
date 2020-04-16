@@ -1,5 +1,5 @@
 
-include_directories( 
+include_directories( RobotSimulatorShmFlex
 		${BULLET_PHYSICS_SOURCE_DIR}/src
 		${BULLET_PHYSICS_SOURCE_DIR}/examples
 		${BULLET_PHYSICS_SOURCE_DIR}/examples/SharedMemory
@@ -19,7 +19,7 @@ set(SRCS
 	../SharedMemory/SharedMemoryInProcessPhysicsC_API.cpp		
 )	
 
-add_executable(RobotSimulatorShm ${SRCS})
+add_executable(RobotSimulatorShmFlex ${SRCS})
 
-target_link_libraries(RobotSimulatorShm pthread rt BulletRobotics BulletExampleBrowserLib BulletFileLoader BulletWorldImporter BulletSoftBody BulletDynamics BulletCollision BulletInverseDynamicsUtils BulletInverseDynamics LinearMath OpenGLWindow gwen Bullet3Common)
+target_link_libraries(RobotSimulatorShmFlex pthread rt BulletRobotics BulletExampleBrowserLib BulletFileLoader BulletWorldImporter BulletSoftBody BulletDynamics BulletCollision BulletInverseDynamicsUtils BulletInverseDynamics LinearMath OpenGLWindow gwen Bullet3Common)
 

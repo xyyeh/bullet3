@@ -6,23 +6,12 @@
 #include <sys/mman.h>
 #include <sys/shm.h>
 #include <vector>
+#include <fstream>
 
 #include "robot.h"
 #include "shm_sem.h"
 
 const unsigned int kSecToNanosec = 1e9;
-
-struct RobotPath
-{
-#define kLineNum (10)
-
-	b3RobotSimulatorAddUserDebugLineArgs args[kLineNum];
-	btVector3 point[kLineNum];
-	int id[kLineNum] = {-10, -10, -10, -10, -10, -10, -10, -10, -10, -10};
-
-	int prev_id = 0;
-	int curr_id = 0;
-};
 
 #define DOF (2)
 struct RobotData
@@ -64,10 +53,10 @@ int main(int argc, char* argv[])
 	sim->setTimeStep(kFixedTimeStep);
 
 	// setup gravity
-	sim->setGravity(btVector3(0, 0, -9.81));
+	sim->setGravity(btVector3(0, 0, 0));
 
 	// setup world
-	int plane_id = sim->loadURDF("plane.urdf");
+	// int plane_id = sim->loadURDF("plane.urdf");
 
 	// setup robot
 	Robot arm;
@@ -78,22 +67,13 @@ int main(int argc, char* argv[])
 	{
 		sim->setCollisionFilterGroupMask(robot_id, i, 0, 0);
 	}
-	sim->setCollisionFilterGroupMask(plane_id, -1, 0, 0);
+	// sim->setCollisionFilterGroupMask(plane_id, -1, 0, 0);
 
 	// setup dynamics
 	struct b3RobotSimulatorChangeDynamicsArgs dynArgs;
 	dynArgs.m_linearDamping = 0;
 	dynArgs.m_angularDamping = 0;
 	sim->changeDynamics(robot_id, 0, dynArgs);
-
-	// setup additional stuffs
-	// int blockId = sim->loadURDF("cube.urdf");
-	// btVector3 pos(0, 0, 3);
-	// btQuaternion ori(0, 0, 0, 1);
-	// sim->resetBasePositionAndOrientation(blockId, pos, ori);
-
-	// path
-	RobotPath path;
 
 	// frame
 	b3RobotSimulatorAddUserDebugLineArgs frame_args;
@@ -115,9 +95,22 @@ int main(int argc, char* argv[])
 
 	// start loop
 	double sim_time = 0;
-	double tau[7], q[7], dq[7];
-	double q_d[7] = {0, 0.3, 0, -0.3, 0, 1.5, 0};
 	double prev_time = 0;
+
+	// feedback
+	std::vector<double> theta_d(arm.Dof());
+	std::vector<double> q(arm.Dof());
+	std::vector<double> dq(arm.Dof());
+	std::vector<double> theta(arm.Dof());
+	std::vector<double> dtheta(arm.Dof());
+	std::vector<double> tau_cmd(arm.Dof());
+
+	theta_d[0] = 0;
+
+	std::cout << "Total dof = " << arm.Dof() << std::endl;
+
+	// file
+	std::ofstream fs("data.csv");
 
 	// start looping after one second
 	struct timespec t;
@@ -132,55 +125,61 @@ int main(int argc, char* argv[])
 
 		sim_time += kFixedTimeStep;
 
-		// read states and send torques
-		// shared_memory.Lock();
+		if (sim_time >= 2)
+		{
+			theta_d[0] = 1;
+		}
+
+		if (sim_time < 10)
+		{
+			fs << theta_d[0] << "," << theta[0] << "," << q[0] << std::endl;
+		}
+
+		// feedback ready
 		for (uint32_t i = 0; i < arm.Dof(); i++)
 		{
-			double q, dq;
-			arm.JointState(sim, i, q, dq);
-			double cmd = 0 * (0 - q) - 4 * dq;
-			ptr->tau[i] = arm.StepJointDynamics(sim, i, cmd, q, dq);
-			arm.SetDesiredTau(sim, i, ptr->tau[i]);
+			theta[i] = arm.MotorPosition(i);
+			dtheta[i] = arm.MotorVelocity(i);
+			q[i] = arm.LinkPosition(i);
+			dq[i] = arm.LinkVelocity(i);
 		}
+
+		// shared_memory.Lock();
+		// for (uint32_t i = 0; i < arm.Dof(); i++)
+		// {
+		// 	ptr->q[i] = q[i];
+		// 	ptr->dq[i] = dq[i];
+		// 	tau_cmd[i] = ptr->tau[i];
+		// }
 		// shared_memory.Unlock();
 
-		// for (uint32_t i = 0; i < arm.Dof(); i++)
-		// 	arm.SetDesiredTau(sim, i, 0);
+		// compute control and step dynamics
+		for (uint32_t i = 0; i < arm.Dof(); i++)
+		{
+			tau_cmd[i] = 1000 * (theta_d[i] - theta[i]) + 0 * (0 - dtheta[i]);
+			arm.SetJointTorque(sim, i, tau_cmd[i]);
+			arm.StepJointDynamics(i, kFixedTimeStep);
+		}
+
+		// link torque
+		for (uint32_t i = 0; i < arm.Dof(); i++)
+		{
+			arm.SetDesiredTau(sim, i, arm.LinkTorque(i));
+		}
 
 		// step simulation
 		sim->stepSimulation();
 
-		// b3LinkState link_state;
-		// sim->getLinkState(robot_id, 5, 0, 0, &link_state);
-
-		if ((sim_time - prev_time) > 0.25)
+		if ((sim_time - prev_time) > 1)
 		{
 			prev_time = sim_time;
+			printf("sim time = %f\n", sim_time);
 			// for (int i = 0; i < 3; i++)
 			// {
-			// 	printf("%.3f\t", link_state.m_worldPosition[i]);
+
 			// }
 			// printf("\n");
-
-			// for (int i = 0; i < 10; i++)
-			// {
-			// 	printf("%d\t", path.id[i]);
-			// }
-			// printf("\n");
-
-			// // remove old
-			// if (path.id[path.curr_id] != -10)
-			// {
-			// 	sim->removeUserDebugItem(path.id[path.curr_id]);
-			// }
-			// // add new
-			// path.prev_id = path.curr_id;
-			// path.curr_id = (path.prev_id + 1) % kLineNum;
-			// path.point[path.curr_id][0] = link_state.m_worldPosition[0];
-			// path.point[path.curr_id][1] = link_state.m_worldPosition[1];
-			// path.point[path.curr_id][2] = link_state.m_worldPosition[2];
-			// path.args[path.curr_id].m_lineWidth = 3;
-			// path.id[path.curr_id] = sim->addUserDebugLine(path.point[path.prev_id], path.point[path.curr_id], path.args[path.curr_id]);
+			// printf("%.3f\n", state.m_jointPosition);
 		}
 
 		// calculate next shot
@@ -192,6 +191,8 @@ int main(int argc, char* argv[])
 			t.tv_sec++;
 		}
 	}
+
+	fs.close();
 
 	std::cout << "Disconnect sim" << std::endl;
 

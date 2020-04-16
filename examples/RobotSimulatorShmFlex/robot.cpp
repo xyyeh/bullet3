@@ -3,6 +3,7 @@
 #include "Bullet3Common/b3HashMap.h"
 
 #include <iostream>
+#include <vector>
 
 struct RobotInternalData
 {
@@ -15,6 +16,7 @@ struct RobotInternalData
 	}
 
 	b3HashMap<b3HashString, int> joint_name_to_id;
+	std::vector<FlexibleJoint> joints_;
 };
 
 Robot::Robot()
@@ -49,19 +51,16 @@ void Robot::SetDesiredTau(class b3RobotSimulatorClientAPI_NoGUI* sim, const int&
 	sim->setJointMotorControl(data_->robot_id, jointIdx, controlArgs);
 }
 
-void Robot::JointState(class b3RobotSimulatorClientAPI_NoGUI* sim, const int& jointIdx, double& q, double& dq)
+void Robot::SetJointTorque(class b3RobotSimulatorClientAPI_NoGUI* sim, const int& joint_idx, const double& tau_cmd)
 {
 	struct b3JointSensorState state;
-	sim->getJointState(data_->robot_id, jointIdx, &state);
-	q = state.m_jointPosition;
-	dq = state.m_jointVelocity;
+	sim->getJointState(data_->robot_id, joint_idx, &state);
+	data_->joints_[joint_idx].SetInputs(tau_cmd, state.m_jointPosition, state.m_jointVelocity);
 }
 
-double Robot::StepJointDynamics(class b3RobotSimulatorClientAPI_NoGUI* sim, const int& jointIdx, const double& tau_cmd, double& q, double& dq)
+void Robot::StepJointDynamics(const int& joint_idx, const double& dt)
 {
-	joints_[jointIdx].SetInputs(tau_cmd, q, dq);
-
-	return joints_[jointIdx].LinkTorque();
+	data_->joints_[joint_idx].StepDynamics(dt);
 }
 
 void Robot::ResetPose(class b3RobotSimulatorClientAPI_NoGUI* sim)
@@ -96,10 +95,42 @@ int Robot::Setup(class b3RobotSimulatorClientAPI_NoGUI* sim, const std::string& 
 			data_->joint_name_to_id.insert(jointInfo.m_jointName, i);
 		}
 
-		joints_[i].SetParameters(0.95992, 10957, 1);
+		FlexibleJoint jnt;
+		jnt.SetParameters(0.0742, 100, 0.3);
+		data_->joints_.push_back(jnt);
 	}
 
 	ResetPose(sim);
 
 	return data_->robot_id;
+}
+
+double Robot::LinkPosition(const int& joint_idx) const
+{
+	return data_->joints_[joint_idx].LinkPosition();
+}
+
+double Robot::LinkVelocity(const int& joint_idx) const
+{
+	return data_->joints_[joint_idx].LinkVelocity();
+}
+
+double Robot::LinkTorque(const int& joint_idx) const
+{
+	return data_->joints_[joint_idx].LinkTorque();
+}
+
+double Robot::LinkDtorque(const int& joint_idx) const
+{
+	return data_->joints_[joint_idx].LinkDtorque();
+}
+
+double Robot::MotorPosition(const int& joint_idx) const
+{
+	return data_->joints_[joint_idx].MotorPosition();
+}
+
+double Robot::MotorVelocity(const int& joint_idx) const
+{
+	return data_->joints_[joint_idx].MotorVelocity();
 }
