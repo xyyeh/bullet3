@@ -18,11 +18,11 @@ void FlexibleJoint::StepDynamics(const double& dt)
 {
 	// new input
 	double prev_tau_s = dyn_.tau_s;
-	dyn_.tau_s = 100 * (dyn_.theta - dyn_.q) + 0.3 * (dyn_.dtheta - dyn_.dq);
+	dyn_.tau_s = param_.K * (dyn_.theta - dyn_.q) + param_.D * (dyn_.dtheta - dyn_.dq);
 	dyn_.dtau_s = (dyn_.tau_s - prev_tau_s) / dt;
 
 	// new values
-	dyn_.ddtheta = (1.0 / 0.0742) * (dyn_.tau_cmd - dyn_.tau_s);
+	dyn_.ddtheta = (1.0 / param_.B) * (dyn_.tau_cmd - dyn_.tau_s);
 	dyn_.dtheta = dyn_.ddtheta * dt + dyn_.dtheta;
 	dyn_.theta = dyn_.dtheta * dt + dyn_.theta;
 }

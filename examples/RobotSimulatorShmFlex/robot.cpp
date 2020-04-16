@@ -96,7 +96,8 @@ int Robot::Setup(class b3RobotSimulatorClientAPI_NoGUI* sim, const std::string& 
 		}
 
 		FlexibleJoint jnt;
-		jnt.SetParameters(0.0742, 100, 0.3);
+		// jnt.SetParameters(0.0742, 100, 0.3);
+		jnt.SetParameters(0.0742, 500, 1.5);
 		data_->joints_.push_back(jnt);
 	}
 

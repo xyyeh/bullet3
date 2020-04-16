@@ -174,12 +174,6 @@ int main(int argc, char* argv[])
 		{
 			prev_time = sim_time;
 			printf("sim time = %f\n", sim_time);
-			// for (int i = 0; i < 3; i++)
-			// {
-
-			// }
-			// printf("\n");
-			// printf("%.3f\n", state.m_jointPosition);
 		}
 
 		// calculate next shot
