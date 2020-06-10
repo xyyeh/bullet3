@@ -1,46 +1,57 @@
-#include "b3RobotSimulatorClientAPI.h"
+#include "bullet_api/b3RobotSimulatorClientAPI.h"
 
 #include <string.h>
 #include <iostream>
 #include <assert.h>
 #include <sys/mman.h>
 #include <sys/shm.h>
+#include <memory>
+#include <vector>
 
-#define ASSERT_EQ(a, b) assert((a) == (b));
-#include "robot.h"
-#include "shm_sem.h"
-
-const unsigned int kSecToNanosec = 1e9;
-const unsigned int kShmSize = 1024;
-const unsigned int kShmKey = 8765;
-
-struct RobotData
-{
-	double tau[7];
-	double q[7];
-	double dq[7];
-};
+#include "external/include/robot.h"
+#include "external/include/shm_sem.h"
+#include "external/include/shm_struct.h"
+#include "external/include/timer.h"
 
 int main(int argc, char* argv[])
 {
-	b3RobotSimulatorClientAPI* sim = new b3RobotSimulatorClientAPI();
-	bool isConnected = sim->connect(eCONNECT_GUI);
+	// parse options
+	std::string urdf_path;
+	double sim_frequency;
+	if (argc == 3)
+	{
+		urdf_path = std::string(argv[1]);
+		sim_frequency = std::atof(argv[2]);
+	}
+	else if (argc == 2)
+	{
+		urdf_path = std::string(argv[1]);
+		sim_frequency = 4000;
+	}
+	else
+	{
+		std::cout << "Please run with: <executable> <urdf path> <simulation frequency>" << std::endl;
+		return -1;
+	}
 
-	if (!isConnected)
+	// pointer to simulation
+	std::unique_ptr<b3RobotSimulatorClientAPI> sim = std::make_unique<b3RobotSimulatorClientAPI>();
+	if (!sim->connect(eCONNECT_GUI))
 	{
 		std::cout << "Cannot connect" << std::endl;
 		return -1;
 	}
 
 	// shared memory
-	ShmSemaphore shared_memory("/physics_shm");
-	shared_memory.Create(sizeof(struct RobotData));
-	shared_memory.Attach();
-	RobotData* ptr = static_cast<RobotData*>(shared_memory.Data());
+	SharedMemory shmem;
+	shmem.Initialize("/bullet_shm");
+	shmem.Create(sizeof(struct RobotInterface));
+	shmem.Attach();
+	RobotInterface* ptr = static_cast<RobotInterface*>(shmem.Data());
 
 	// setup visualizer
 	sim->configureDebugVisualizer(COV_ENABLE_GUI, 0);
-	sim->configureDebugVisualizer(COV_ENABLE_SHADOWS, 0);
+	sim->configureDebugVisualizer(COV_ENABLE_SHADOWS, 1);
 
 	// setup timeout
 	sim->setTimeOut(10);
@@ -49,91 +60,89 @@ int main(int argc, char* argv[])
 	sim->syncBodies();
 
 	// setup fixed time step
-	btScalar kFixedTimeStep = 1.0 / 1000.0;
-	sim->setTimeStep(kFixedTimeStep);
-
-	// setup gravity
-	sim->setGravity(btVector3(0, 0, -9.81));
+	RTTimer timer;
+	timer.SetFrequency(sim_frequency);
+	sim->setTimeStep(1.0 / timer.Frequency());
 
 	// setup world
-	int planeId = sim->loadURDF("plane.urdf");
+	sim->setGravity(btVector3(0, 0, -9.81));
+	int plane_id = sim->loadURDF("plane.urdf");
 
 	// setup robot
-	Robot LWR;
-	int kukaId = LWR.Setup(sim, "./panda/panda.urdf", btVector3(0, 0, 0.00001));
-
-	// setup dynamics
+	Robot rbt;
+	int rbt_id = rbt.Setup(sim.get(), urdf_path, btVector3(0, 0, 0));
+	if (rbt_id < 0)
+	{
+		std::cout << "Robot not parsed" << std::endl;
+		return -1;
+	}
 	struct b3RobotSimulatorChangeDynamicsArgs dynArgs;
 	dynArgs.m_linearDamping = 0;
 	dynArgs.m_angularDamping = 0;
-	sim->changeDynamics(kukaId, 0, dynArgs);
-
-	// setup additional stuffs
-	// int blockId = sim->loadURDF("cube.urdf");
-	// btVector3 pos(0, 0, 3);
-	// btQuaternion ori(0, 0, 0, 1);
-	// sim->resetBasePositionAndOrientation(blockId, pos, ori);
+	sim->changeDynamics(rbt_id, 0, dynArgs);
 
 	// simulation paramters
 	sim->setRealTimeSimulation(false);
 
-	// start loop
-	double sim_time = 0;
-	double tau[7], q[7], dq[7];
-	double q_d[7] = {0, 0.3, 0, -0.3, 0, 1.5, 0};
-	double prev_time = 0;
+	// disable collisions
+	for (int i = -1; i < rbt.Dof(); i++)
+	{
+		sim->setCollisionFilterGroupMask(rbt_id, i, 0, 0);
+	}
+	// sim->setCollisionFilterGroupMask(plane_id, -1, 0, 0);
+
+	// local feedback and commands
+	std::vector<double> q(rbt.Dof());
+	std::vector<double> dq(rbt.Dof());
+	std::vector<double> tau_J_d(rbt.Dof());
 
 	// start looping after one second
-	struct timespec t;
-	clock_gettime(CLOCK_MONOTONIC, &t);
-	t.tv_sec++;
+	double sim_time = 0, prev_time = 0;
+	timer.StartWithDelay(1);
 	while (1)
 	{
 		if (!sim->canSubmitCommand())
 		{
-			std::cout << "//////////////////// WARNING ////////////////////" << std::endl;
+			std::cout << "Failed to send command!" << std::endl;
 		}
+		sim_time += (1.0 / timer.Frequency());
 
-		sim_time += kFixedTimeStep;
-
-		shared_memory.Lock();
-		// read states and send torques
-		for (uint32_t i = 0; i < LWR.Dof(); i++)
+		// joint feedback and command
+		for (uint32_t i = 0; i < rbt.Dof(); i++)
 		{
-			LWR.JointState(sim, i, ptr->q[i], ptr->dq[i]);
-			LWR.SetDesiredTau(sim, i, ptr->tau[i]);
+			rbt.JointState(sim.get(), i, q[i], dq[i]);
+			rbt.SetDesiredTau(sim.get(), i, tau_J_d[i]);
 		}
-		shared_memory.Unlock();
 
-		sim->stepSimulation();
+		// update shared memory
+		shmem.Lock();
+		for (uint32_t i = 0; i < rbt.Dof(); i++)
+		{
+			ptr->q[i] = q[i];
+			ptr->dq[i] = dq[i];
+			tau_J_d[i] = ptr->tau_J_d[i];
+		}
+		shmem.Unlock();
 
 		// if ((sim_time - prev_time) > 0.25)
 		// {
 		// 	prev_time = sim_time;
 		// 	// print time
 		// 	// printf("%.3f\n", sim_time);
-		// 	for (int i = 0; i < LWR.Dof(); i++)
+		// 	for (int i = 0; i < rbt.Dof(); i++)
 		// 	{
 		// 		printf("%.3f\t", shm->tau[i]);
 		// 	}
 		// 	printf("\n");
 		// }
 
-		clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &t, NULL);
-
-		// calculate next shot
-		t.tv_nsec += (kFixedTimeStep * kSecToNanosec);
-		while (t.tv_nsec >= kSecToNanosec)
-		{
-			t.tv_nsec -= kSecToNanosec;
-			t.tv_sec++;
-		}
+		// step simulation
+		sim->stepSimulation();
+		timer.WaitForTick();
 	}
 
-	std::cout << "Disconnect sim" << std::endl;
-
+	std::cout << "Delete sim and exit" << std::endl;
 	sim->disconnect();
 
-	std::cout << "Delete sim and exit" << std::endl;
-	delete sim;
+	return 0;
 }

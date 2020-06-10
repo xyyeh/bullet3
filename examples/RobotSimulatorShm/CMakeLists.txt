@@ -6,13 +6,10 @@ include_directories(
   )
   
 set(SRCS
-  main.cpp
-	b3RobotSimulatorClientAPI.cpp
-	b3RobotSimulatorClientAPI.h	
-	robot.cpp
-  robot.h
-  shm_sem.h
-  shm_sem.cc
+	main.cpp
+	bullet_api/b3RobotSimulatorClientAPI.cpp
+	external/src/robot.cpp
+	external/src/shm_sem.cpp
 	../ExampleBrowser/InProcessExampleBrowser.cpp
 	../SharedMemory/GraphicsServerExample.cpp
 	../SharedMemory/RemoteGUIHelper.cpp

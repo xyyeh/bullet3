@@ -1,4 +1,4 @@
-#include "robot.h"
+#include "../include/robot.h"
 #include "b3RobotSimulatorClientAPI_NoGUI.h"
 #include "Bullet3Common/b3HashMap.h"
 
@@ -75,9 +75,9 @@ int Robot::Setup(class b3RobotSimulatorClientAPI_NoGUI* sim, const std::string& 
 	args.m_startPosition = startPos;
 	args.m_startOrientation = startOrn;
 	args.m_forceOverrideFixedBase = true;
+	args.m_flags |= URDF_USE_INERTIA_FROM_FILE;
 
 	data_->robot_id = sim->loadURDF(urdf_path, args);
-
 	data_->robot_dof = sim->getNumJoints(data_->robot_id);
 	for (int i = 0; i < data_->robot_dof; i++)
 	{
