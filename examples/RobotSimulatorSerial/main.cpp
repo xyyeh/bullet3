@@ -13,6 +13,8 @@
 #include "external/include/shm_struct.h"
 #include "external/include/timer.h"
 
+const double kSwitchingTime = 3.0;
+
 int main(int argc, char* argv[])
 {
 	// parse options
@@ -31,6 +33,16 @@ int main(int argc, char* argv[])
 	else
 	{
 		std::cout << "Please run with: <executable> <urdf path> <simulation frequency>" << std::endl;
+		return -1;
+	}
+
+	// thread properties
+	struct sched_param params;
+	params.sched_priority = 49;  // max value at sched_get_priority_max(SCHED_FIFO);
+	auto ret = pthread_setschedparam(pthread_self(), SCHED_FIFO, &params);
+	if (ret != 0)
+	{
+		std::cout << "Unsuccessful in setting thread realtime priority" << std::endl;
 		return -1;
 	}
 
@@ -65,7 +77,7 @@ int main(int argc, char* argv[])
 	sim->setTimeStep(1.0 / timer.Frequency());
 
 	// setup world
-	sim->setGravity(btVector3(0, 0, -9.81));
+	sim->setGravity(btVector3(0, 0, 0));
 	int plane_id = sim->loadURDF("plane.urdf");
 
 	// setup robot
@@ -89,15 +101,17 @@ int main(int argc, char* argv[])
 	{
 		sim->setCollisionFilterGroupMask(rbt_id, i, 0, 0);
 	}
-	// sim->setCollisionFilterGroupMask(plane_id, -1, 0, 0);
+	sim->setCollisionFilterGroupMask(plane_id, -1, 0, 0);
 
 	// local feedback and commands
 	std::vector<double> q(rbt.Dof());
 	std::vector<double> dq(rbt.Dof());
+	std::vector<double> tau_default(rbt.Dof());
 	std::vector<double> tau_J_d(rbt.Dof());
 
 	// start looping after one second
 	double sim_time = 0, prev_time = 0;
+	double gamma = 0, ctrler_on_time = 0;
 	timer.StartWithDelay(1);
 	while (1)
 	{
@@ -124,6 +138,38 @@ int main(int argc, char* argv[])
 		}
 		shmem.Unlock();
 
+		// default commands
+		for (uint32_t i = 0; i < rbt.Dof(); i++)
+		{
+			tau_default[i] = rbt.Kp(i) * (rbt.Home(i) - q[i]) - rbt.Kd(i) * dq[i];
+		}
+
+		// controller switching
+		if (ptr->controller_to_hw)
+		{
+			double delta_time = (sim_time - ctrler_on_time);
+
+			if (delta_time < kSwitchingTime)
+			{
+				gamma = delta_time / kSwitchingTime;
+			}
+			else
+			{
+				gamma = 1;
+				ptr->hw_to_controller = 1;
+			}
+		}
+		else
+		{
+			ctrler_on_time = sim_time;
+		}
+
+		// blend controller
+		for (uint32_t i = 0; i < rbt.Dof(); i++)
+		{
+			rbt.SetDesiredTau(sim.get(), i, (1 - gamma) * tau_default[i] + gamma * tau_J_d[i]);
+		}
+
 		// if ((sim_time - prev_time) > 0.25)
 		// {
 		// 	prev_time = sim_time;
@@ -138,6 +184,8 @@ int main(int argc, char* argv[])
 
 		// step simulation
 		sim->stepSimulation();
+
+		// calculate next shot
 		timer.WaitForTick();
 	}
 

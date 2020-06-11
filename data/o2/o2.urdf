@@ -41,7 +41,7 @@
     </inertial>
   </link>
   <joint name="base_joint1" type="prismatic">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="400.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="base_link"/>
     <child link="base_link1"/>
@@ -69,7 +69,7 @@
     </inertial>
   </link>
   <joint name="base_joint2" type="prismatic">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="400.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="base_link1"/>
     <child link="base_link2"/>
@@ -97,7 +97,7 @@
     </inertial>
   </link>
   <joint name="base_joint3" type="prismatic">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="1" k_position="400.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="base_link2"/>
     <child link="base_link3"/>
@@ -125,7 +125,7 @@
     </inertial>
   </link>
   <joint name="base_joint4" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="400.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="base_link3"/>
     <child link="base_link4"/>
@@ -153,7 +153,7 @@
     </inertial>
   </link>
   <joint name="base_joint5" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="400.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="base_link4"/>
     <child link="base_link5"/>
@@ -181,7 +181,7 @@
     </inertial>
   </link>
   <joint name="base_joint6" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="400.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="base_link5"/>
     <child link="base_link6"/>
@@ -209,7 +209,7 @@
     </inertial>
   </link>
   <joint name="base_fixed6f" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="base_link6"/>
     <child link="base_link6f"/>
@@ -237,7 +237,7 @@
     </inertial>
   </link>
   <joint name="base_fixed6f1" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="base_link6f"/>
     <child link="base_link6f1"/>
@@ -266,7 +266,7 @@
     </inertial>
   </link>
   <joint name="right_fixed_chassis" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0.785398" xyz="0.58 -0.2 0"/>
     <parent link="base_link6"/>
     <child link="right_chassis"/>
@@ -294,7 +294,7 @@
     </inertial>
   </link>
   <joint name="right_joint1" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="-0.4" k_position="400.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 1.5707963 -1.5707963" xyz="0 0 0"/>
     <parent link="right_chassis"/>
     <child link="right_link1"/>
@@ -322,7 +322,7 @@
     </inertial>
   </link>
   <joint name="right_joint2" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="1" k_position="400.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 -1.5707963 1.5707963" xyz="0 0.0204332 0"/>
     <parent link="right_link1"/>
     <child link="right_link2"/>
@@ -350,7 +350,7 @@
     </inertial>
   </link>
   <joint name="right_joint3" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0.4" k_position="400.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="1.5707963 -1.5707963 0" xyz="0 -0.3231333 0"/>
     <parent link="right_link2"/>
     <child link="right_link3"/>
@@ -378,7 +378,7 @@
     </inertial>
   </link>
   <joint name="right_joint4" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="1.5" k_position="400.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="1.5707963 0 0" xyz="0 0.0 0"/>
     <parent link="right_link3"/>
     <child link="right_link4"/>
@@ -406,7 +406,7 @@
     </inertial>
   </link>
   <joint name="right_joint5" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="1" k_position="400.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="-1.5707963 0 0" xyz="0 0.3579778 0"/>
     <parent link="right_link4"/>
     <child link="right_link5"/>
@@ -434,7 +434,7 @@
     </inertial>
   </link>
   <joint name="right_joint6" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="-0.4" k_position="400.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 -1.5707963 1.5707963" xyz="0 0 0"/>
     <parent link="right_link5"/>
     <child link="right_link6"/>
@@ -462,7 +462,7 @@
     </inertial>
   </link>
   <joint name="right_joint7" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0.4" k_position="400.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 -1.5707963 1.5707963" xyz="0 0 0"/>
     <parent link="right_link6"/>
     <child link="right_link7"/>
@@ -490,7 +490,7 @@
     </inertial>
   </link>
   <joint name="right_fixed8" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="1.5707963 0 0" xyz="0 -0.23675 0"/>
     <parent link="right_link7"/>
     <child link="right_link8"/>
@@ -518,7 +518,7 @@
     </inertial>
   </link>
   <joint name="right_fixed2f" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="right_link2"/>
     <child link="right_link2f"/>
@@ -546,7 +546,7 @@
     </inertial>
   </link>
   <joint name="right_fixed3f" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="right_link3"/>
     <child link="right_link3f"/>
@@ -574,7 +574,7 @@
     </inertial>
   </link>
   <joint name="right_fixed4f" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="right_link4"/>
     <child link="right_link4f"/>
@@ -602,7 +602,7 @@
     </inertial>
   </link>
   <joint name="right_fixed5f" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="right_link5"/>
     <child link="right_link5f"/>
@@ -630,7 +630,7 @@
     </inertial>
   </link>
   <joint name="right_fixed8f" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="right_link8"/>
     <child link="right_link8f"/>
@@ -659,7 +659,7 @@
     </inertial>
   </link>
   <joint name="left_fixed_chassis" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 -0.785398" xyz="0.58 0.2 0"/>
     <parent link="base_link6"/>
     <child link="left_chassis"/>
@@ -687,7 +687,7 @@
     </inertial>
   </link>
   <joint name="left_joint1" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 1.5707963 -1.5707963" xyz="0 0 0"/>
     <parent link="left_chassis"/>
     <child link="left_link1"/>
@@ -715,7 +715,7 @@
     </inertial>
   </link>
   <joint name="left_joint2" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 -1.5707963 1.5707963" xyz="0 0.0204332 0"/>
     <parent link="left_link1"/>
     <child link="left_link2"/>
@@ -743,7 +743,7 @@
     </inertial>
   </link>
   <joint name="left_joint3" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="1.5707963 -1.5707963 0" xyz="0 -0.3231333 0"/>
     <parent link="left_link2"/>
     <child link="left_link3"/>
@@ -771,7 +771,7 @@
     </inertial>
   </link>
   <joint name="left_joint4" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="1.5707963 0 0" xyz="0 0.0 0"/>
     <parent link="left_link3"/>
     <child link="left_link4"/>
@@ -799,7 +799,7 @@
     </inertial>
   </link>
   <joint name="left_joint5" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="-1.5707963 0 0" xyz="0 0.3579778 0"/>
     <parent link="left_link4"/>
     <child link="left_link5"/>
@@ -827,7 +827,7 @@
     </inertial>
   </link>
   <joint name="left_joint6" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 -1.5707963 1.5707963" xyz="0 0 0"/>
     <parent link="left_link5"/>
     <child link="left_link6"/>
@@ -855,7 +855,7 @@
     </inertial>
   </link>
   <joint name="left_joint7" type="revolute">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 -1.5707963 1.5707963" xyz="0 0 0"/>
     <parent link="left_link6"/>
     <child link="left_link7"/>
@@ -883,7 +883,7 @@
     </inertial>
   </link>
   <joint name="left_fixed8" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="1.5707963 0 0" xyz="0 -0.23675 0"/>
     <parent link="left_link7"/>
     <child link="left_link8"/>
@@ -911,7 +911,7 @@
     </inertial>
   </link>
   <joint name="left_fixed2f" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="left_link2"/>
     <child link="left_link2f"/>
@@ -939,7 +939,7 @@
     </inertial>
   </link>
   <joint name="left_fixed3f" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="left_link3"/>
     <child link="left_link3f"/>
@@ -967,7 +967,7 @@
     </inertial>
   </link>
   <joint name="left_fixed4f" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="left_link4"/>
     <child link="left_link4f"/>
@@ -995,7 +995,7 @@
     </inertial>
   </link>
   <joint name="left_fixed5f" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="left_link5"/>
     <child link="left_link5f"/>
@@ -1023,7 +1023,7 @@
     </inertial>
   </link>
   <joint name="left_fixed8f" type="fixed">
-    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+    <safety_controller home="0" k_position="0.0" k_velocity="0.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="left_link8"/>
     <child link="left_link8f"/>

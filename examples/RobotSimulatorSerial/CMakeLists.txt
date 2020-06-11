@@ -10,6 +10,7 @@ set(SRCS
 	bullet_api/b3RobotSimulatorClientAPI.cpp
 	external/src/robot.cpp
 	external/src/shm_sem.cpp
+	external/src/tinyxml2.cpp
 	../ExampleBrowser/InProcessExampleBrowser.cpp
 	../SharedMemory/GraphicsServerExample.cpp
 	../SharedMemory/RemoteGUIHelper.cpp
@@ -18,7 +19,7 @@ set(SRCS
 	../SharedMemory/SharedMemoryInProcessPhysicsC_API.cpp		
 )	
 
-add_executable(RobotSimulatorShm ${SRCS})
+add_executable(RobotSimulatorSerial ${SRCS})
 
-target_link_libraries(RobotSimulatorShm pthread rt BulletRobotics BulletExampleBrowserLib BulletFileLoader BulletWorldImporter BulletSoftBody BulletDynamics BulletCollision BulletInverseDynamicsUtils BulletInverseDynamics LinearMath OpenGLWindow gwen Bullet3Common)
+target_link_libraries(RobotSimulatorSerial pthread rt BulletRobotics BulletExampleBrowserLib BulletFileLoader BulletWorldImporter BulletSoftBody BulletDynamics BulletCollision BulletInverseDynamicsUtils BulletInverseDynamics LinearMath OpenGLWindow gwen Bullet3Common)
 
