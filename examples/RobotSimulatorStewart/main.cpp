@@ -56,8 +56,8 @@ int main(int argc, char* argv[])
 
 	// setup robot
 	Robot stewart;
-	int robot_id = stewart.Setup(sim, "./stewart/stewart_platform.urdf", btVector3(0, 0, 0.5));
-	int robot_base_id = sim->loadURDF("./stewart/stewart_base.urdf");
+	int robot_id = stewart.Setup(sim, "../../../data/stewart/stewart_platform.urdf", btVector3(0, 0, 0.5));
+	int robot_base_id = sim->loadURDF("../../../data/stewart/stewart_base.urdf");
 
 	// setup dynamics
 	struct b3RobotSimulatorChangeDynamicsArgs dyn_args;

@@ -11,8 +11,8 @@
       <geometry>
 	<mesh filename="meshes/base.stl"/>
       </geometry>
-       <material name="blue">
-        <color rgba="0 0 1 1"/>
+       <material name="green">
+        <color rgba="0 1 0 1"/>
       </material>
     </visual>
     <collision>
