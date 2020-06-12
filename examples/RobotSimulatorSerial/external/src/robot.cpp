@@ -152,7 +152,6 @@ int Robot::Setup(class b3RobotSimulatorClientAPI_NoGUI* sim, const std::string& 
 	};
 
 	std::ifstream file(urdf_path);
-
 	unsigned int num_dof = sim->getNumJoints(data_->robot_id);
 	data_->kp.resize(num_dof);
 	data_->kd.resize(num_dof);
