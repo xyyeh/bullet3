@@ -54,6 +54,8 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
+	std::cout << "Please run with: <executable> <urdf path> <simulation frequency>" << std::endl;
+
 	// shared memory
 	SharedMemory shmem;
 	shmem.Initialize("/bullet_shm");
@@ -82,7 +84,7 @@ int main(int argc, char* argv[])
 
 	// setup robot
 	Robot rbt;
-	int rbt_id = rbt.Setup(sim.get(), urdf_path, btVector3(0, 0, 0));
+	int rbt_id = rbt.Setup(sim.get(), urdf_path, btVector3(0, 0, 1));
 	if (rbt_id < 0)
 	{
 		std::cout << "Robot not parsed" << std::endl;
